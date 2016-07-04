@@ -157,7 +157,7 @@ function Permissions() {
 }
 
 function deprecated(name) {
-  console.warn("Calling window.plugins.permissions." + name + " with the successCallback as first argument is deprecated");
+  console.warn("Calling cordova.plugins.permissions." + name + " with the successCallback as first argument is deprecated");
   console.warn("The new signature is '" + name + "(permission, successCallback, errorCallback)'");
 }
 
@@ -181,13 +181,4 @@ Permissions.prototype = {
         cordova.exec(successCallback, errorCallback, permissionsName, 'requestPermission', [permission]);
     }
 };
-Permissions.install = function() {
-    if (!window.plugins) {
-        window.plugins = {};
-    }
-
-    window.plugins.permissions = new Permissions();
-    return window.plugins.permissions;
-};
-
-cordova.addConstructor(Permissions.install);
+module.exports = new Permissions();

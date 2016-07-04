@@ -20,7 +20,7 @@ Usage
 ### API
 
 ```javascript
-var permissions = window.plugins.permissions;
+var permissions = cordova.plugins.permissions;
 permissions.hasPermission(permission, successCallback, errorCallback);
 permissions.requestPermission(permission, successCallback, errorCallback);
 ```
@@ -48,7 +48,7 @@ Example
 --------
 
 ```javascript
-var permissions = window.plugins.permissions;
+var permissions = cordova.plugins.permissions;
 permissions.hasPermission(checkPermissionCallback, null, permissions.CAMERA);
 
 function checkPermissionCallback(status) {
