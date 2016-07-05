@@ -11,7 +11,7 @@ Installation
 --------
 
 ```bash
-cordova plugin add cordova-plugin-android-permissions@0.7.0
+cordova plugin add cordova-plugin-android-permissions@0.8.0
 ```
 
 Usage
@@ -49,7 +49,7 @@ Example
 
 ```javascript
 var permissions = cordova.plugins.permissions;
-permissions.hasPermission(checkPermissionCallback, null, permissions.CAMERA);
+permissions.hasPermission(permissions.CAMERA, checkPermissionCallback, null);
 
 function checkPermissionCallback(status) {
   if(!status.hasPermission) {
@@ -57,9 +57,12 @@ function checkPermissionCallback(status) {
       console.warn('Camera permission is not turned on');
     }
 
-    permissions.requestPermission(function(status) {
-      if( !status.hasPermission ) errorCallback();
-    }, errorCallback, permissions.CAMERA);
+    permissions.requestPermission(
+      permissions.CAMERA,
+      function(status) {
+        if(!status.hasPermission) errorCallback();
+      },
+      errorCallback);
   }
 }
 ```
