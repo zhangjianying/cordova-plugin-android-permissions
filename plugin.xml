@@ -14,12 +14,11 @@
     <engine name="cordova" version=">=5.0.0"/>
   </engines>
 
-  <js-module src="www/permissions.js" name="Permissions">
-    <clobbers target="window.plugins.permissions" />
-  </js-module>
-
   <!-- android -->
   <platform name="android">
+    <js-module src="www/permissions.js" name="Permissions">
+      <clobbers target="cordova.plugins.permissions" />
+    </js-module>
 
     <config-file target="res/xml/config.xml" parent="/*">
       <feature name="Permissions">
