@@ -33,7 +33,7 @@ public class Permissions extends CordovaPlugin {
                 }
             });
             return true;
-        } else if (ACTION_REQUEST_PERMISSION.equals(action)) {
+        } else if (ACTION_REQUEST_PERMISSION.equals(action) || ACTION_REQUEST_PERMISSIONS.equals(action)) {
             cordova.getThreadPool().execute(new Runnable() {
                 public void run() {
                     try {
@@ -43,22 +43,6 @@ public class Permissions extends CordovaPlugin {
                         JSONObject returnObj = new JSONObject();
                         addProperty(returnObj, KEY_ERROR, ACTION_REQUEST_PERMISSION);
                         addProperty(returnObj, KEY_MESSAGE, "Request permission has been denied.");
-                        callbackContext.error(returnObj);
-                        permissionsCallback = null;
-                    }
-                }
-            });
-            return true;
-        } else if (ACTION_REQUEST_PERMISSIONS.equals(action)) {
-            cordova.getThreadPool().execute(new Runnable() {
-                public void run() {
-                    try {
-                        requestPermissionAction(callbackContext, args);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        JSONObject returnObj = new JSONObject();
-                        addProperty(returnObj, KEY_ERROR, ACTION_REQUEST_PERMISSION);
-                        addProperty(returnObj, KEY_MESSAGE, "Request permissions has been denied.");
                         callbackContext.error(returnObj);
                         permissionsCallback = null;
                     }
