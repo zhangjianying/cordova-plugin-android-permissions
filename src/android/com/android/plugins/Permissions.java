@@ -115,24 +115,21 @@ public class Permissions extends CordovaPlugin {
             callbackContext.success(returnObj);
         } else {
             permissionsCallback = callbackContext;
-            String[] stringArray = new String[permission.length()];
-            for (int i = 0; i < permission.length(); i++) {
-                stringArray[i]= permission.getString(i);
-            }
-            cordova.requestPermissions(this, REQUEST_CODE_ENABLE_PERMISSION, stringArray);
+            String[] permissions = getPermissions(permission);
+            cordova.requestPermissions(this, REQUEST_CODE_ENABLE_PERMISSION, permissions);
         }
     }
 
-    private boolean hasAllPermissions(JSONArray permissions) throws JSONException {
-        boolean hasPermission = true;
-
-        for (int i = 0; i < permissions.length(); i++) {
-            if(!cordova.hasPermission(permissions.getString(i))) {
-                hasPermission = false;
-            }
+    private String[] getPermissions(JSONArray permission) {
+        String[] stringArray = new String[permission.length()];
+        for (int i = 0; i < permission.length(); i++) {
+            stringArray[i] = permission.getString(i);
         }
+        return stringArray;
+    }
 
-        return hasPermission;
+    private boolean hasAllPermissions(JSONArray permissions) throws JSONException {
+        return hasAllPermissions(getPermissions(permissions));
     }
 
     private boolean hasAllPermissions(String[] permissions) throws JSONException {
