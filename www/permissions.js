@@ -164,7 +164,7 @@ function deprecated(name) {
 Permissions.prototype = {
     hasPermission: function(permission, successCallback, errorCallback) {
         if (typeof permission === "function") {
-            deprecated("hasPermission")
+            deprecated("hasPermission");
             successCallback = arguments[0];
             errorCallback = arguments[1];
             permission = arguments[2];
@@ -173,12 +173,15 @@ Permissions.prototype = {
     },
     requestPermission: function(permission, successCallback, errorCallback) {
         if (typeof permission === "function") {
-            deprecated("requestPermission")
+            deprecated("requestPermission");
             successCallback = arguments[0];
             errorCallback = arguments[1];
             permission = arguments[2];
         }
         cordova.exec(successCallback, errorCallback, permissionsName, 'requestPermission', [permission]);
+    },
+    requestPermissions: function(permissions, successCallback, errorCallback) {
+        cordova.exec(successCallback, errorCallback, permissionsName, 'requestPermissions', permissions);
     }
 };
 module.exports = new Permissions();
