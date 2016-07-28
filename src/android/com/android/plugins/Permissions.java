@@ -63,13 +63,8 @@ public class Permissions extends CordovaPlugin {
         if (permissions != null && permissions.length > 0) {
             //Call hasPermission again to verify
             boolean hasAllPermissions = hasAllPermissions(permissions);
-            if(hasAllPermissions) {
-                addProperty(returnObj, ACTION_HAS_PERMISSION, true);
-                permissionsCallback.success(returnObj);
-            } else {
-                addProperty(returnObj, ACTION_HAS_PERMISSION, false);
-                permissionsCallback.success(returnObj);
-            }
+            addProperty(returnObj, ACTION_HAS_PERMISSION, hasAllPermissions);
+            permissionsCallback.success(returnObj);
         } else {
             addProperty(returnObj, KEY_ERROR, ACTION_REQUEST_PERMISSION);
             addProperty(returnObj, KEY_MESSAGE, "Unknown error.");
@@ -99,31 +94,35 @@ public class Permissions extends CordovaPlugin {
         }
     }
 
-    private void requestPermissionAction(CallbackContext callbackContext, JSONArray permission) throws Exception {
-        if (permission == null || permission.length() == 0) {
+    private void requestPermissionAction(CallbackContext callbackContext, JSONArray permissions) throws Exception {
+        if (permissions == null || permissions.length() == 0) {
             JSONObject returnObj = new JSONObject();
             addProperty(returnObj, KEY_ERROR, ACTION_REQUEST_PERMISSION);
-            addProperty(returnObj, KEY_MESSAGE, "One time one permission only.");
+            addProperty(returnObj, KEY_MESSAGE, "At least one permission.");
             callbackContext.error(returnObj);
         } else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             JSONObject returnObj = new JSONObject();
             addProperty(returnObj, ACTION_HAS_PERMISSION, true);
             callbackContext.success(returnObj);
-        } else if (hasAllPermissions(permission)) {
+        } else if (hasAllPermissions(permissions)) {
             JSONObject returnObj = new JSONObject();
             addProperty(returnObj, ACTION_HAS_PERMISSION, true);
             callbackContext.success(returnObj);
         } else {
             permissionsCallback = callbackContext;
-            String[] permissions = getPermissions(permission);
-            cordova.requestPermissions(this, REQUEST_CODE_ENABLE_PERMISSION, permissions);
+            String[] permissionArray = getPermissions(permissions);
+            cordova.requestPermissions(this, REQUEST_CODE_ENABLE_PERMISSION, permissionArray);
         }
     }
 
-    private String[] getPermissions(JSONArray permission) {
-        String[] stringArray = new String[permission.length()];
-        for (int i = 0; i < permission.length(); i++) {
-            stringArray[i] = permission.getString(i);
+    private String[] getPermissions(JSONArray permissions) {
+        String[] stringArray = new String[permissions.length()];
+        for (int i = 0; i < permissions.length(); i++) {
+            try {
+                stringArray[i] = permissions.getString(i);
+            } catch (JSONException ignored) {
+                //Believe exception only occurs when adding duplicate keys, so just ignore it
+            }
         }
         return stringArray;
     }
@@ -133,15 +132,14 @@ public class Permissions extends CordovaPlugin {
     }
 
     private boolean hasAllPermissions(String[] permissions) throws JSONException {
-        boolean hasPermission = true;
 
         for (String permission : permissions) {
             if(!cordova.hasPermission(permission)) {
-                hasPermission = false;
+                return false;
             }
         }
 
-        return hasPermission;
+        return true;
     }
 
     private void addProperty(JSONObject obj, String key, Object value) {
