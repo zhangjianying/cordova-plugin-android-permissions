@@ -11,7 +11,7 @@ Installation
 --------
 
 ```bash
-cordova plugin add cordova-plugin-android-permissions@0.9.1
+cordova plugin add cordova-plugin-android-permissions@0.10.0
 ```
 
 ※ Support Android SDK >= 14
