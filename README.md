@@ -11,7 +11,7 @@ Installation
 --------
 
 ```bash
-cordova plugin add cordova-plugin-android-permissions@0.10.0
+cordova plugin add cordova-plugin-android-permissions
 ```
 
 ※ Support Android SDK >= 14
@@ -23,13 +23,14 @@ Usage
 
 ```javascript
 var permissions = cordova.plugins.permissions;
-permissions.hasPermission(permission, successCallback, errorCallback);
+permissions.checkPermission(permission, successCallback, errorCallback);
 permissions.requestPermission(permission, successCallback, errorCallback);
 permissions.requestPermissions(permissions, successCallback, errorCallback);
 ```
 
 #### Deprecated API - still work now, will not support in the future.
 ```javascript
+permissions.hasPermission(permission, successCallback, errorCallback);
 permissions.hasPermission(successCallback, errorCallback, permission);
 permissions.requestPermission(successCallback, errorCallback, permission);
 ```
