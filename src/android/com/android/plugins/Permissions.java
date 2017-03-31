@@ -13,7 +13,7 @@ import org.json.JSONObject;
  */
 public class Permissions extends CordovaPlugin {
 
-    private static final String ACTION_HAS_PERMISSION = "hasPermission";
+    private static final String ACTION_CHECK_PERMISSION = "checkPermission";
     private static final String ACTION_REQUEST_PERMISSION = "requestPermission";
     private static final String ACTION_REQUEST_PERMISSIONS = "requestPermissions";
 
@@ -21,15 +21,16 @@ public class Permissions extends CordovaPlugin {
 
     private static final String KEY_ERROR = "error";
     private static final String KEY_MESSAGE = "message";
+    private static final String KEY_RESULT_PERMISSION = "hasPermission";
 
     private CallbackContext permissionsCallback;
 
     @Override
     public boolean execute(String action, final JSONArray args, final CallbackContext callbackContext) throws JSONException {
-        if (ACTION_HAS_PERMISSION.equals(action)) {
+        if (ACTION_CHECK_PERMISSION.equals(action)) {
             cordova.getThreadPool().execute(new Runnable() {
                 public void run() {
-                    hasPermissionAction(callbackContext, args);
+                    checkPermissionAction(callbackContext, args);
                 }
             });
             return true;
@@ -61,9 +62,9 @@ public class Permissions extends CordovaPlugin {
 
         JSONObject returnObj = new JSONObject();
         if (permissions != null && permissions.length > 0) {
-            //Call hasPermission again to verify
+            //Call checkPermission again to verify
             boolean hasAllPermissions = hasAllPermissions(permissions);
-            addProperty(returnObj, ACTION_HAS_PERMISSION, hasAllPermissions);
+            addProperty(returnObj, KEY_RESULT_PERMISSION, hasAllPermissions);
             permissionsCallback.success(returnObj);
         } else {
             addProperty(returnObj, KEY_ERROR, ACTION_REQUEST_PERMISSION);
@@ -73,20 +74,20 @@ public class Permissions extends CordovaPlugin {
         permissionsCallback = null;
     }
 
-    private void hasPermissionAction(CallbackContext callbackContext, JSONArray permission) {
+    private void checkPermissionAction(CallbackContext callbackContext, JSONArray permission) {
         if (permission == null || permission.length() == 0 || permission.length() > 1) {
             JSONObject returnObj = new JSONObject();
-            addProperty(returnObj, KEY_ERROR, ACTION_HAS_PERMISSION);
+            addProperty(returnObj, KEY_ERROR, ACTION_CHECK_PERMISSION);
             addProperty(returnObj, KEY_MESSAGE, "One time one permission only.");
             callbackContext.error(returnObj);
         } else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             JSONObject returnObj = new JSONObject();
-            addProperty(returnObj, ACTION_HAS_PERMISSION, true);
+            addProperty(returnObj, KEY_RESULT_PERMISSION, true);
             callbackContext.success(returnObj);
         } else {
             try {
                 JSONObject returnObj = new JSONObject();
-                addProperty(returnObj, ACTION_HAS_PERMISSION, cordova.hasPermission(permission.getString(0)));
+                addProperty(returnObj, KEY_RESULT_PERMISSION, cordova.hasPermission(permission.getString(0)));
                 callbackContext.success(returnObj);
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -102,11 +103,11 @@ public class Permissions extends CordovaPlugin {
             callbackContext.error(returnObj);
         } else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             JSONObject returnObj = new JSONObject();
-            addProperty(returnObj, ACTION_HAS_PERMISSION, true);
+            addProperty(returnObj, KEY_RESULT_PERMISSION, true);
             callbackContext.success(returnObj);
         } else if (hasAllPermissions(permissions)) {
             JSONObject returnObj = new JSONObject();
-            addProperty(returnObj, ACTION_HAS_PERMISSION, true);
+            addProperty(returnObj, KEY_RESULT_PERMISSION, true);
             callbackContext.success(returnObj);
         } else {
             permissionsCallback = callbackContext;
