@@ -48,25 +48,57 @@ permissions.READ_CALENDAR
 ...
 ```
 
-Example
---------
-
-```javascript
+## Examples
+```js
 var permissions = cordova.plugins.permissions;
-permissions.hasPermission(permissions.CAMERA, checkPermissionCallback, null);
+```
 
-function checkPermissionCallback(status) {
-  if(!status.hasPermission) {
-    var errorCallback = function() {
-      console.warn('Camera permission is not turned on');
-    }
+#### Quick check
+```js
 
-    permissions.requestPermission(
+permissions.hasPermission(permissions.CAMERA, function( status ){
+  if ( status.hasPermission ) {
+    console.log("Yes :D ");
+  }
+  else {
+    console.warn("No :( ");
+  }
+});
+```
+#### Quick request
+```js
+permissions.requestPermission(permissions.CAMERA, success, error);
+
+function error() {
+  console.warn('Camera permission is not turned on');
+}
+
+function success( status ) {
+  if( !status.hasPermission ) error();
+}
+```
+#### Example multiple permissions
+```js
+var list = [
       permissions.CAMERA,
+      permissions.GET_ACCOUNTS
+    ];
+
+permissions.hasPermission(list, callback, null);
+
+function error() {
+  console.warn('Camera or Accounts permission is not turned on');
+}
+
+function success( status ) {
+  if( !status.hasPermission ) {
+  
+    permissions.requestPermission(
+      list,
       function(status) {
-        if(!status.hasPermission) errorCallback();
+        if( !status.hasPermission ) error();
       },
-      errorCallback);
+      error);
   }
 }
 ```
