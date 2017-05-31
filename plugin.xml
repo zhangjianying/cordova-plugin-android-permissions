@@ -29,4 +29,12 @@
     <source-file src="src/android/com/android/plugins/Permissions.java" target-dir="src/com/android/plugins"/>
   </platform>
 
+  <!-- browser -->
+  <platform name="browser">
+    <js-module src="www/permissions-browser.js" name="Permissions">
+      <clobbers target="cordova.plugins.permissions" />
+    </js-module>
+  </platform>
+
+
 </plugin>
