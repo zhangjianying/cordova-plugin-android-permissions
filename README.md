@@ -7,6 +7,8 @@ Since Android 6.0, the Android permissions checking mechanism has been changed. 
 
 For old Android plugins you (developers) are using may not support this new mechanism or already stop updating. So either to find a new plugin to solving this problem, nor trying to add the mechanism in the old plugin. If you don't want to do those, you can try this plugin.
 
+As a convenience we support browser and iOS platforms as well. But this plugin will simple reply that any permission checked of requested was granted.
+
 Installation
 --------
 
@@ -80,9 +82,9 @@ function success( status ) {
 #### Example multiple permissions
 ```js
 var list = [
-      permissions.CAMERA,
-      permissions.GET_ACCOUNTS
-    ];
+  permissions.CAMERA,
+  permissions.GET_ACCOUNTS
+];
 
 permissions.hasPermission(list, callback, null);
 
@@ -93,7 +95,7 @@ function error() {
 function success( status ) {
   if( !status.hasPermission ) {
   
-    permissions.requestPermission(
+    permissions.requestPermissions(
       list,
       function(status) {
         if( !status.hasPermission ) error();
