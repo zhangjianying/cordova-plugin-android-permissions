@@ -82,9 +82,9 @@ function success( status ) {
 #### Example multiple permissions
 ```js
 var list = [
-      permissions.CAMERA,
-      permissions.GET_ACCOUNTS
-    ];
+  permissions.CAMERA,
+  permissions.GET_ACCOUNTS
+];
 
 permissions.hasPermission(list, callback, null);
 
@@ -95,7 +95,7 @@ function error() {
 function success( status ) {
   if( !status.hasPermission ) {
   
-    permissions.requestPermission(
+    permissions.requestPermissions(
       list,
       function(status) {
         if( !status.hasPermission ) error();
