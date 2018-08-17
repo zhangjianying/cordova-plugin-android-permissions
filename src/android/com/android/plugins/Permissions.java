@@ -7,6 +7,7 @@ import org.apache.cordova.CordovaPlugin;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import android.os.Build;
 
 /**
  * Created by JasonYang on 2016/3/11.
@@ -28,6 +29,12 @@ public class Permissions extends CordovaPlugin {
     @Override
     public boolean execute(String action, final JSONArray args, final CallbackContext callbackContext) throws JSONException {
         if (ACTION_CHECK_PERMISSION.equals(action)) {
+			if (Build.VERSION.SDK_INT <= 22) {
+				JSONObject returnObj = new JSONObject();
+				addProperty(returnObj, KEY_RESULT_PERMISSION, false);
+				callbackContext.success(returnObj);
+				return true;
+			}
             cordova.getThreadPool().execute(new Runnable() {
                 public void run() {
                     checkPermissionAction(callbackContext, args);
@@ -35,6 +42,13 @@ public class Permissions extends CordovaPlugin {
             });
             return true;
         } else if (ACTION_REQUEST_PERMISSION.equals(action) || ACTION_REQUEST_PERMISSIONS.equals(action)) {
+			
+			if (Build.VERSION.SDK_INT <= 22) {
+				JSONObject returnObj = new JSONObject();
+				addProperty(returnObj, KEY_RESULT_PERMISSION, false);
+				callbackContext.success(returnObj);
+				return true;
+			}
             cordova.getThreadPool().execute(new Runnable() {
                 public void run() {
                     try {
@@ -96,6 +110,9 @@ public class Permissions extends CordovaPlugin {
     }
 
     private void requestPermissionAction(CallbackContext callbackContext, JSONArray permissions) throws Exception {
+	
+ 
+		
         if (permissions == null || permissions.length() == 0) {
             JSONObject returnObj = new JSONObject();
             addProperty(returnObj, KEY_ERROR, ACTION_REQUEST_PERMISSION);
