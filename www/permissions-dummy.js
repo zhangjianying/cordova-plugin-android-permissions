@@ -154,6 +154,8 @@ function Permissions() {
     this.WRITE_SYNC_SETTINGS = 'android.permission.WRITE_SYNC_SETTINGS';
     this.WRITE_USER_DICTIONARY = 'android.permission.WRITE_USER_DICTIONARY';
     this.WRITE_VOICEMAIL = 'com.android.voicemail.permission.WRITE_VOICEMAIL';
+	
+	this.REQUEST_INSTALL_PACKAGES= 'android.permission.REQUEST_INSTALL_PACKAGES';
 }
 
 function deprecated(name) {
